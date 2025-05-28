@@ -47,6 +47,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - TypeScript support
 - Tailwind CSS for styling
 - Component library with Radix UI
-- Form handling with React Hook Form and Zod
 - Code quality tools (ESLint, Prettier)
 - React Compiler for improved performance
