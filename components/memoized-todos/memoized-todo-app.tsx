@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RenderCounter from '../render-counter';
 import type { Todo } from '@/lib/types';
-import TodoForm from './memoized-todo-form';
-import TodoList from './memoized-todo-list';
-import TodoStats from './memoized-todo-stats';
-import { StatisticsProfiler } from '../performance/statistics-profiler';
+import MemoizedTodoList from './memoized-todo-list';
+import MemoizedTodoStats from './memoized-todo-stats';
+import MemoizedTodoForm from './memoized-todo-form';
+import { StatisticsProfiler } from '@/components/performance/statistics-profiler';
 import { filterTodos } from '@/lib/calculations';
 
 export default function MemoizedTodoApp() {
@@ -19,7 +19,7 @@ export default function MemoizedTodoApp() {
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
   // Add a new todo
-  const addTodo = (text: string) => {
+  const addTodo = useCallback((text: string) => {
     setTodos(prevTodos => [
       ...prevTodos,
       {
@@ -28,24 +28,24 @@ export default function MemoizedTodoApp() {
         completed: false,
       },
     ]);
-  };
+  }, []);
 
   // Toggle a todo's completed status
-  const toggleTodo = (id: number) => {
+  const toggleTodo = useCallback((id: number) => {
     setTodos(prevTodos => prevTodos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
-  };
+  }, []);
 
   // Delete a todo
-  const deleteTodo = (id: number) => {
+  const deleteTodo = useCallback((id: number) => {
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-  };
+  }, []);
 
   // Change the filter
-  const changeFilter = (newFilter: 'all' | 'active' | 'completed') => {
+  const changeFilter = useCallback((newFilter: 'all' | 'active' | 'completed') => {
     setFilter(newFilter);
-  };
+  }, []);
 
-  const filteredTodos = filterTodos(todos, filter);
+  const filteredTodos = useMemo(() => filterTodos(todos, filter), [todos, filter]);
 
   return (
     <StatisticsProfiler id="TodoApp-Component">
@@ -56,7 +56,7 @@ export default function MemoizedTodoApp() {
         </CardHeader>
         <CardContent className="space-y-6">
           <StatisticsProfiler id="TodoForm-Component">
-            <TodoForm onAddTodo={addTodo} />
+            <MemoizedTodoForm onAddTodo={addTodo} />
           </StatisticsProfiler>
 
           <div className="flex justify-center space-x-4 mb-4">
@@ -87,11 +87,11 @@ export default function MemoizedTodoApp() {
           </div>
 
           <StatisticsProfiler id="TodoList-Component">
-            <TodoList todos={filteredTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
+            <MemoizedTodoList todos={filteredTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
           </StatisticsProfiler>
 
           <StatisticsProfiler id="TodoStats-Component">
-            <TodoStats todos={todos} />
+            <MemoizedTodoStats todos={todos} />
           </StatisticsProfiler>
         </CardContent>
       </Card>

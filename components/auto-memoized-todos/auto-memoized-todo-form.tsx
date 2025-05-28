@@ -11,6 +11,8 @@ interface TodoFormProps {
 }
 
 export default function AutoMemoizedTodoForm({ onAddTodo }: TodoFormProps) {
+  'use memo';
+
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {

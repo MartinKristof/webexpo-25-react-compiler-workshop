@@ -12,6 +12,8 @@ interface TodoListProps {
 }
 
 export default function AutoMemoizedTodoList({ todos, onToggle, onDelete }: TodoListProps) {
+  'use memo';
+
   const complexity = calculateListComplexity(todos);
 
   return (

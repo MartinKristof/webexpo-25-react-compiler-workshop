@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import RenderCounter from '../render-counter';
@@ -10,7 +10,7 @@ interface TodoFormProps {
   onAddTodo: (text: string) => void;
 }
 
-export default function MemoizedTodoForm({ onAddTodo }: TodoFormProps) {
+function TodoForm({ onAddTodo }: TodoFormProps) {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,3 +40,5 @@ export default function MemoizedTodoForm({ onAddTodo }: TodoFormProps) {
     </div>
   );
 }
+
+export default memo(TodoForm);

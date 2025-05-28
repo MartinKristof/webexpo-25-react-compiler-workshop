@@ -1,8 +1,9 @@
 'use client';
 
-import RenderCounter from '../render-counter';
-import TodoItem from './memoized-todo-item';
+import { memo, useCallback } from 'react';
 import type { Todo } from '@/lib/types';
+import MemoizedTodoItem from './memoized-todo-item';
+import RenderCounter from '../render-counter';
 import { calculateListComplexity } from '@/lib/calculations';
 
 interface TodoListProps {
@@ -11,8 +12,9 @@ interface TodoListProps {
   onDelete: (id: number) => void;
 }
 
-export default function MemoizedTodoList({ todos, onToggle, onDelete }: TodoListProps) {
-  const complexity = calculateListComplexity(todos);
+function MemoizedTodoList({ todos, onToggle, onDelete }: TodoListProps) {
+  const calculateComplexity = useCallback(() => calculateListComplexity(todos), [todos]);
+  const complexity = calculateComplexity();
 
   return (
     <div className="relative">
@@ -24,7 +26,7 @@ export default function MemoizedTodoList({ todos, onToggle, onDelete }: TodoList
           <>
             <p className="text-xs text-gray-500 mb-2">List complexity score: {complexity}</p>
             {todos.map(todo => (
-              <TodoItem key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
+              <MemoizedTodoItem key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
             ))}
           </>
         )}
@@ -32,3 +34,5 @@ export default function MemoizedTodoList({ todos, onToggle, onDelete }: TodoList
     </div>
   );
 }
+
+export default memo(MemoizedTodoList);

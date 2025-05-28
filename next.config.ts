@@ -2,11 +2,11 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // experimental: {
-  //   reactCompiler: {
-  //     compilationMode: 'annotation',
-  //   },
-  // },
+  experimental: {
+    reactCompiler: {
+      compilationMode: 'annotation',
+    },
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

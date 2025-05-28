@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useCallback } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
@@ -14,14 +15,16 @@ interface TodoItemProps {
   onDelete: (id: number) => void;
 }
 
-export default function MemoizedTodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
-  const priority = calculateTodoPriority(todo);
+function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  const calculatePriority = useCallback(() => calculateTodoPriority(todo), [todo]);
+  const priority = calculatePriority();
 
   return (
     <StatisticsProfiler id={`TodoItem-Component-${todo.id}`}>
       <div className="relative">
         <RenderCounter componentName={`TodoItem-${todo.id}`} position="right" showArrow={true} />
         <div className="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-800">
+          <RenderCounter componentName={`TodoItem-${todo.id}`} position="right" showArrow={true} />
           <div className="flex items-center space-x-3">
             <Checkbox
               checked={todo.completed}
@@ -53,3 +56,5 @@ export default function MemoizedTodoItem({ todo, onToggle, onDelete }: TodoItemP
     </StatisticsProfiler>
   );
 }
+
+export default memo(TodoItem);

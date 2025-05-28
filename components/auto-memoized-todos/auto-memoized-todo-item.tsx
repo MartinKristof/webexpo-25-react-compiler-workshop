@@ -15,6 +15,8 @@ interface TodoItemProps {
 }
 
 export default function AutoMemoizedTodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  'use memo';
+
   const priority = calculateTodoPriority(todo);
 
   return (

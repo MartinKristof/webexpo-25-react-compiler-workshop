@@ -1,5 +1,6 @@
 'use client';
 
+import { memo, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Todo } from '@/lib/types';
 import RenderCounter from '../render-counter';
@@ -9,8 +10,10 @@ interface TodoStatsProps {
   todos: Todo[];
 }
 
-export default function MemoizedTodoStats({ todos }: TodoStatsProps) {
-  const stats = calculateTodoStats(todos);
+function MemoizedTodoStats({ todos }: TodoStatsProps) {
+  // Expensive calculations that would benefit from memoization
+  const calculateStats = useCallback(() => calculateTodoStats(todos), [todos]);
+  const stats = calculateStats();
 
   return (
     <div className="relative">
@@ -42,3 +45,5 @@ export default function MemoizedTodoStats({ todos }: TodoStatsProps) {
     </div>
   );
 }
+
+export default memo(MemoizedTodoStats);

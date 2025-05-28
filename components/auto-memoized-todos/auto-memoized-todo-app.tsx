@@ -11,6 +11,8 @@ import { StatisticsProfiler } from '../performance/statistics-profiler';
 import { filterTodos } from '@/lib/calculations';
 
 export default function AutoMemoizedTodoApp() {
+  'use memo';
+
   const [todos, setTodos] = useState<Todo[]>([
     { id: 1, text: 'Learn React Compiler', completed: false },
     { id: 2, text: 'Build a demo app', completed: true },

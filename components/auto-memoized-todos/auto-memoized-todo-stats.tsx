@@ -10,6 +10,8 @@ interface TodoStatsProps {
 }
 
 export default function AutoMemoizedTodoStats({ todos }: TodoStatsProps) {
+  'use memo';
+
   const stats = calculateTodoStats(todos);
 
   return (
