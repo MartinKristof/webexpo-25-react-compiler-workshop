@@ -700,6 +700,7 @@ export default function ComparePage() {
 
   // Add this function to analyze component performance
   const analyzeComponentPerformance = useMemo((): ComponentComparison[] | null => {
+    console.log('selectedResults:', selectedResults);
     if (selectedResults.length < 1) return null; // Need at least two for comparison
 
     const autoMemoizedResult = selectedResults.find(r => r.testDescription.includes(TestDescriptions.AutoMemoized));
@@ -707,12 +708,16 @@ export default function ComparePage() {
       r.testDescription.includes(TestDescriptions.ManuallyMemoized),
     );
     const unoptimizedResult = selectedResults.find(r => r.testDescription.includes(TestDescriptions.UnMemoized));
+    console.log('autoMemoizedResult:', autoMemoizedResult);
+    console.log('manualMemoizedResult:', manualMemoizedResult);
+    console.log('unoptimizedResult:', unoptimizedResult);
 
     // Only proceed if at least two different types of results are selected from the three implementations
     if (selectedTypes < 2) return null;
 
     const components = availableComponentIds
       .map(componentId => {
+        console.log(componentId);
         const autoSummary = autoMemoizedResult?.summaries.find(s => s.componentId === componentId);
         const manualSummary = manualMemoizedResult?.summaries.find(s => s.componentId === componentId);
         const unoptimizedSummary = unoptimizedResult?.summaries.find(s => s.componentId === componentId);
@@ -766,6 +771,7 @@ export default function ComparePage() {
         } else if (hasManual) {
           bestImplementation = 'manual'; // Only manual is selected
         }
+        console.log(bestImplementation);
 
         return {
           componentId,

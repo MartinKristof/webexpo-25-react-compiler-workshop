@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BarChart2, HandMetal, Home, Sparkles } from 'lucide-react';
+import { BarChart2, HandMetal, Home, Sparkles, TestTube } from 'lucide-react';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -28,6 +28,12 @@ export default function Navigation() {
           <Button variant={pathname === '/memoized' ? 'default' : 'outline'} size="sm">
             <HandMetal className="h-4 w-4 mr-2" />
             Memoized manually Todo App
+          </Button>
+        </Link>
+        <Link href="/test">
+          <Button variant={pathname === '/test' ? 'default' : 'outline'} size="sm">
+            <TestTube className="h-4 w-4 mr-2" />
+            External library Test
           </Button>
         </Link>
         <Link href="/compare">
