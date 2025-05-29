@@ -16,6 +16,7 @@ import type {
   ProfilerMetric,
   ComponentSummary,
 } from '@/lib/types';
+import LZString from 'lz-string';
 
 // Import the new components
 import FilterOptions from '@/components/compare/filter-options';
@@ -183,7 +184,13 @@ export default function ComparePage() {
       const storedResults = localStorage.getItem('performanceTestResults');
       if (storedResults) {
         try {
-          const parsedResults = JSON.parse(storedResults) as TestResult[];
+          // Decompress and parse the stored results
+          const decompressed = LZString.decompressFromUTF16(storedResults);
+          if (!decompressed) {
+            throw new Error('Failed to decompress stored results');
+          }
+
+          const parsedResults = JSON.parse(decompressed) as TestResult[];
 
           // Add p75 to statistics if it doesn't exist
           parsedResults.forEach(result => {

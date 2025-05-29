@@ -1,6 +1,7 @@
 import type { TestConfig, TestResult, TestState } from '../performance/types';
 import { TodoSimulator } from './todo-simulator';
 import { calculateStatistics, sortComponentIds } from '../performance/statistics';
+import LZString from 'lz-string';
 
 export class TestRunner {
   private simulator: TodoSimulator;
@@ -92,7 +93,7 @@ export class TestRunner {
               this.stopTest();
             }, 100);
           }
-        }, 500);
+        }, 100);
       } else {
         // For single test, wait a bit to collect metrics before stopping
         setTimeout(() => {
@@ -378,12 +379,33 @@ export class TestRunner {
     };
 
     // Get existing results from localStorage
-    const existingResults = localStorage.getItem('performanceTestResults');
-    const allResults = existingResults ? JSON.parse(existingResults) : [];
+    const existingResultsStr = localStorage.getItem('performanceTestResults');
+    let allResults: (typeof testResultData)[] = [];
 
-    // Add new results and save back to localStorage
+    if (existingResultsStr) {
+      try {
+        // Decompress and parse existing results
+        const decompressed = LZString.decompressFromUTF16(existingResultsStr);
+        if (decompressed) {
+          allResults = JSON.parse(decompressed);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to decompress existing results:', error);
+      }
+    }
+
+    // Add new results
     allResults.push(testResultData);
-    localStorage.setItem('performanceTestResults', JSON.stringify(allResults));
+
+    try {
+      // Compress and save back to localStorage
+      const compressed = LZString.compressToUTF16(JSON.stringify(allResults));
+      localStorage.setItem('performanceTestResults', compressed);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to save test results to localStorage:', error);
+    }
   }
 
   public addMetric(metric: Omit<TestResult['metrics'][0], 'phase'> & { phase: string }): void {

@@ -124,34 +124,39 @@ export function TestControls({
         </TabsList>
 
         <TabsContent value="update" className="space-y-4 pt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="updateTestCount" className="block text-sm font-medium mb-1">
-                Number of Tests
-              </label>
-              <Input
-                id="updateTestCount"
-                type="number"
-                min="1"
-                max="100"
-                value={updateTestCount}
-                onChange={e => setUpdateTestCount(Number.parseInt(e.target.value) || 1)}
-                disabled={isRunning}
-              />
+          <form>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="updateTestCount" className="block text-sm font-medium mb-1">
+                  Number of Tests
+                </label>
+                <Input
+                  id="updateTestCount"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={updateTestCount}
+                  onChange={e => {
+                    const value = Number.parseInt(e.target.value) || 1;
+                    setUpdateTestCount(Math.min(Math.max(value, 1), 100));
+                  }}
+                  disabled={isRunning}
+                />
+              </div>
+              <div>
+                <label htmlFor="todoText" className="block text-sm font-medium mb-1">
+                  Todo Text Prefix
+                </label>
+                <Input
+                  id="todoText"
+                  type="text"
+                  value={todoText}
+                  onChange={e => setTodoText(e.target.value)}
+                  disabled={isRunning}
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="todoText" className="block text-sm font-medium mb-1">
-                Todo Text Prefix
-              </label>
-              <Input
-                id="todoText"
-                type="text"
-                value={todoText}
-                onChange={e => setTodoText(e.target.value)}
-                disabled={isRunning}
-              />
-            </div>
-          </div>
+          </form>
         </TabsContent>
 
         <TabsContent value="mount" className="space-y-4 pt-4">
@@ -163,9 +168,12 @@ export function TestControls({
               id="mountTestCount"
               type="number"
               min="1"
-              max="50"
+              max="100"
               value={mountTestCount}
-              onChange={e => setMountTestCount(Number.parseInt(e.target.value) || 1)}
+              onChange={e => {
+                const value = Number.parseInt(e.target.value) || 1;
+                setMountTestCount(Math.min(Math.max(value, 1), 100));
+              }}
               disabled={isRunning}
             />
           </div>
@@ -183,7 +191,10 @@ export function TestControls({
                 min="1"
                 max="100"
                 value={interactionTestCount}
-                onChange={e => setInteractionTestCount(Number.parseInt(e.target.value) || 1)}
+                onChange={e => {
+                  const value = Number.parseInt(e.target.value) || 1;
+                  setInteractionTestCount(Math.min(Math.max(value, 1), 100));
+                }}
                 disabled={isRunning}
               />
             </div>
